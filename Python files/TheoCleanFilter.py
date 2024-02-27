@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Feb 18 11:33:39 2024
+Created on Tue Feb 27 11:24:33 2024
 
 @author: theorogers
 """
+
 import pandas as pd
 import ast
 
@@ -44,7 +45,9 @@ def process_line(line):
 with open(file_path, 'r') as file:
     lines = file.read().splitlines()
     
-def process_file(lines):
+acceptable_range = 10
+    
+def process_file_filtered(lines):
     #Creating an empty dataframe
     df = pd.DataFrame() 
     #Initialising a counter which counts how many lines have been processed
@@ -60,13 +63,18 @@ def process_file(lines):
         #Process the line and return a row in the df
         line_df = process_line(line.strip())
         
+        max_bid = line_df[(line_df['Type'] == 'bid')]['Price'].max()
+        min_ask = line_df[(line_df['Type'] == 'ask')]['Price'].min()
+        
+        bid_condition = (line_df['Type'] == 'bid') & (line_df['Price'] >= max_bid - acceptable_range)
+        ask_condition = (line_df['Type'] == 'ask') & (line_df['Price'] <= min_ask + acceptable_range)
+        line_df = line_df[bid_condition | ask_condition]
+        
         #Append the row to the main df
         df = pd.concat([df, line_df], ignore_index=True)
     return(df)
 
 #Process and display the first file
-df = process_file(lines)
+df = process_file_filtered(lines)
 df.head(10)
-df.to_csv("LOB sorted")
-
-
+df.to_csv("LOB_sorted_and_filtered")
