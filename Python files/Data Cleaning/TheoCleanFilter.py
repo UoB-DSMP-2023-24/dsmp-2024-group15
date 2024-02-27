@@ -9,8 +9,13 @@ Created on Tue Feb 27 11:24:33 2024
 import pandas as pd
 import ast
 
-file_path = '/Users/theorogers/Desktop/UoB_Set01_2025-01-07LOBs.txt'
+import os
 
+#Current working directory
+script_dir = os.getcwd()
+
+#Data file path, relative to CWD
+file_path = os.path.join(script_dir, '..', '..', 'Prompt', 'Data', 'UoB_Set01_2025-01-07LOBs.txt')
 
 
 #Function to process a line of the LOB

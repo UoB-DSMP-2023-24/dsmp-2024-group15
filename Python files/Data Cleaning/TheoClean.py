@@ -5,10 +5,20 @@ Created on Sun Feb 18 11:33:39 2024
 
 @author: theorogers
 """
+import os
+
+#Current working directory
+script_dir = os.getcwd()
+
+#Data file path, relative to CWD
+file_path = os.path.join(script_dir, '..', '..', 'Prompt', 'Data', 'UoB_Set01_2025-01-07LOBs.txt')
+
+
+
 import pandas as pd
 import ast
 
-file_path = '/Users/theorogers/Desktop/UoB_Set01_2025-01-07LOBs.txt'
+
 
 
 
