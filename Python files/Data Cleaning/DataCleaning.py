@@ -70,25 +70,27 @@ def process_file(lines):
         df = pd.concat([df, line_df], ignore_index=True)
     return(df)
 
+#Iterate through every file in the directory
 for file_name in os.listdir(directory):
-    # Check if the file is a .txt file
+    
+    #Process .txt files
     if file_name.endswith('.txt'):
         print(f"Processing {file_name}...")
 
-        # Construct full path to the file
+        #The file path for the given file
         file_path = os.path.join(directory, file_name)
 
-        # Open the file and process each line
+        #Open the file and process each line
         with open(file_path, 'r') as file:
             lines = file.read().splitlines()
             df = process_file(lines)
 
-        # Output file name based on the input file name
+        #Output file name based on the input file name
         base_name = os.path.splitext(file_name)[0]
         output_file_name = f"{base_name}_LOB_sorted.csv"
         
-        # Save to CSV
-        df.to_csv(os.path.join(data_dir, output_file_name))
+        #Save to CSV in the directory
+        df.to_csv(os.path.join(directory, output_file_name))
 
         print(f"Saved to {output_file_name}")
 
