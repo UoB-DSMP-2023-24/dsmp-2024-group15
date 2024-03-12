@@ -19,8 +19,6 @@ import ast
 
 
 
-
-
 #Function to process a line of the LOB
 def process_line(line):
     #This allows the string to pass through as literal

@@ -6,8 +6,6 @@ Created on Tue Feb 27 11:24:33 2024
 @author: theorogers
 """
 
-import pandas as pd
-import ast
 
 import os
 
@@ -15,7 +13,13 @@ import os
 script_dir = os.getcwd()
 
 #Data file path, relative to CWD
-file_path = os.path.join(script_dir, '..', '..', 'Prompt', 'Data', 'UoB_Set01_2025-01-07LOBs.txt')
+directory = os.path.join(script_dir, '..', '..', 'Prompt', 'Data')
+
+
+import pandas as pd
+import ast
+
+acceptable_range = 10
 
 #Function to process a line of the LOB
 def process_line(line):
@@ -45,11 +49,6 @@ def process_line(line):
 
 
 
-#Open the file and process each line
-with open(file_path, 'r') as file:
-    lines = file.read().splitlines()
-    
-acceptable_range = 10
     
 def process_file_filtered(lines):
     #Creating an empty dataframe
@@ -67,9 +66,11 @@ def process_file_filtered(lines):
         #Process the line and return a row in the df
         line_df = process_line(line.strip())
         
+        #Estalishing the conditions for filtering
         max_bid = line_df[(line_df['Type'] == 'bid')]['Price'].max()
         min_ask = line_df[(line_df['Type'] == 'ask')]['Price'].min()
         
+        #Filtering
         bid_condition = (line_df['Type'] == 'bid') & (line_df['Price'] >= max_bid - acceptable_range)
         ask_condition = (line_df['Type'] == 'ask') & (line_df['Price'] <= min_ask + acceptable_range)
         line_df = line_df[bid_condition | ask_condition]
@@ -78,7 +79,31 @@ def process_file_filtered(lines):
         df = pd.concat([df, line_df], ignore_index=True)
     return(df)
 
-#Process and display the first file
-df = process_file_filtered(lines)
-df.head(10)
-df.to_csv("LOB_sorted_and_filtered.csv")
+#Iterate through every file in the directory
+for file_name in os.listdir(directory):
+    
+    #Process .txt files
+    if file_name.endswith('.txt'):
+        print(f"Processing {file_name}...")
+
+        #The file path for the given file
+        file_path = os.path.join(directory, file_name)
+
+        #Open the file and process each line
+        with open(file_path, 'r') as file:
+            lines = file.read().splitlines()
+            df = process_file_filtered(lines)
+
+        #Output file name based on the input file name
+        base_name = os.path.splitext(file_name)[0]
+        output_file_name = f"{base_name}_LOB_sorted.csv"
+        
+        #Save to CSV in the directory
+        df.to_csv(os.path.join(directory, output_file_name))
+
+        print(f"Saved to {output_file_name}")
+
+output_file_name = f"{base_name}_LOB_sorted_filtered.csv"
+df.to_csv(output_file_name)
+
+    
