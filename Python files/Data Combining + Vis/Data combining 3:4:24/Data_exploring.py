@@ -34,8 +34,6 @@ for filename in sorted(os.listdir(directory)):
         dataframes.append(df)
         
 
-        
-
 
 combined_df = pd.concat(dataframes, ignore_index=True)
 combined_df = combined_df.drop(columns=['Index'])
@@ -205,7 +203,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # Assuming combined_df is a pandas DataFrame
-output_file = 'combined_df.csv'  # Name of the output CSV file
+output_file = 'combined_df_2.csv'  # Name of the output CSV file
 
 chunk_size = 1000  # Size of each chunk for processing
 number_of_chunks = len(combined_df) // chunk_size + (1 if len(combined_df) % chunk_size else 0)  # Total number of chunks
