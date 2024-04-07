@@ -11,11 +11,13 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.max_rows', 100)
 
 time_start_1 = time.time()
 
 # Replace 'your_file.csv' with the path to your CSV file
-file_path = 'C:/Users/fearh/Desktop/theo pt2/combined_df.csv'
+file_path = '/Users/gali/Downloads/combined_df.csv'
 
 # Reading the CSV file into a DataFrame
 combined_df = pd.read_csv(file_path)
@@ -39,8 +41,7 @@ def filter_bids_asks(group, n_bid, n_ask):
         min_bid_price = group.loc[group['Type'] == 'bid', 'Price'].min()
         bid_std = group.loc[group['Type'] == 'bid', 'Price'].std()
         filtered_bids = group[(group['Type'] == 'bid') & 
-                              (group['Price'] >= max_bid_price - n_bid * bid_std) & 
-                              (group['Price'] <= min_bid_price + n_bid * bid_std)]
+                              (group['Price'] >= max_bid_price - n_bid * bid_std)]
     else:
         filtered_bids = pd.DataFrame(columns=group.columns)  # Empty DataFrame if no bids
     
@@ -49,8 +50,7 @@ def filter_bids_asks(group, n_bid, n_ask):
         max_ask_price = group.loc[group['Type'] == 'ask', 'Price'].max()
         ask_std = group.loc[group['Type'] == 'ask', 'Price'].std()
         filtered_asks = group[(group['Type'] == 'ask') & 
-                              (group['Price'] >= min_ask_price - n_ask * ask_std) & 
-                              (group['Price'] <= max_ask_price + n_ask * ask_std)]
+                              (group['Price'] <= min_ask_price + n_ask * ask_std)]
     else:
         filtered_asks = pd.DataFrame(columns=group.columns)  # Empty DataFrame if no asks
     
@@ -59,7 +59,7 @@ def filter_bids_asks(group, n_bid, n_ask):
 
 
 # Define the value of 'n' for bids and asks separately
-n_bid = 10
+n_bid = 1/10
 n_ask = 1/10
 
 # Group by one-hour intervals and 'Type'
@@ -67,6 +67,8 @@ grouped = combined_df.groupby([pd.Grouper(key='adjusted_time', freq='H')])
 
 # Apply the filtering function to each group
 filtered_df = grouped.apply(filter_bids_asks, n_bid=n_bid, n_ask=n_ask).reset_index(drop=True)
+#print(filtered_df.loc[filtered_df['Type'] == 'bid'])
+print(filtered_df)
 
 # Measure time taken
 time_taken = round(time.time() - time_start_2, 2)
@@ -80,6 +82,8 @@ time_start_2_2 = time.time()
 
 # Convert timedelta strings to datetime objects
 combined_df['adjusted_time'] = pd.to_timedelta(combined_df['adjusted_time'])
+print(combined_df['adjusted_time'])
+print(type(combined_df['adjusted_time']))
 bid_filt_h_df = filtered_df[filtered_df['Type'] == 'bid']
 ask_filt_h_df = filtered_df[filtered_df['Type'] == 'ask']
 # Plotting
@@ -90,7 +94,7 @@ plt.scatter(bid_filt_h_df['adjusted_time'], bid_filt_h_df['Price'], s=1, alpha=0
 
 # Plot asks
 plt.scatter(ask_filt_h_df['adjusted_time'], ask_filt_h_df['Price'], s=1, alpha=0.02, color='orange', label='Asks')
-
+ 
 # Add legend
 plt.legend()
 
@@ -119,7 +123,7 @@ plt.scatter(ask_filt_h_df['adjusted_time'], ask_filt_h_df['Price'], s=2, alpha=0
 # Add legend
 plt.legend()
 
-lim = 4*(10**15)
+lim = 5*(10**15)
 
 plt.xlim(0,lim/1000)
 
