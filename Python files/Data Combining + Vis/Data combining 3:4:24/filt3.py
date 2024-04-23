@@ -123,7 +123,7 @@ plt.scatter(ask_filt_h_df['adjusted_time'], ask_filt_h_df['Price'], s=2, alpha=0
 # Add legend
 plt.legend()
 
-lim = 5*(10**15)
+lim = 40*(10**15)
 
 plt.xlim(0,lim/1000)
 
