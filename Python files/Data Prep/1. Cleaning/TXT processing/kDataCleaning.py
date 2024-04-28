@@ -11,6 +11,7 @@ import os
 script_dir = os.getcwd()
 
 #Data file path, relative to CWD
+#This has been changed since
 directory = os.path.join(script_dir, '..', '..', 'Prompt', 'Data')
 
 
@@ -42,7 +43,7 @@ def process_line(line):
             #Creating a the string to add to the dataframe
             temp_row.append([time_stamp, type_, price, volume])
     
-    # Convert the list to a DataFrame
+    #Converting the list to a DataFrame
     return pd.DataFrame(temp_row, columns=['Time', 'Type', 'Price', 'Volume'])
 
 
@@ -68,10 +69,10 @@ def process_file(lines):
         df = pd.concat([df, line_df], ignore_index=True)
     return(df)
 
-#Iterate through every file in the directory
+#Iterating through every file in the directory
 for file_name in os.listdir(directory):
     
-    #Process .txt files
+    #Processing .txt files
     if file_name.endswith('.txt'):
         print(f"Processing {file_name}...")
 
